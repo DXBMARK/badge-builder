@@ -248,7 +248,7 @@ const SvgSource = ({ svg, config, onCopy }) => {
                 </Typography>
               </Box>
             </Box>
-            <Typography variant="caption" sx={{ display: 'block', mt: 1.5, color: 'text.disabled', textAlign: 'center', fontSize: '0.6rem' }}>
+            <Typography variant="caption" sx={{ display: 'block', mt: 1.5, color: 'text.secondary', textAlign: 'center', fontSize: '0.7rem' }}>
               Mock GitHub README preview — badge renders as it would appear in a real README.
             </Typography>
             <Button

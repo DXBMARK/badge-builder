@@ -38,6 +38,7 @@ import { buildSVG } from './utils/svgBuilder';
 import { downloadSVG, downloadPNG, downloadJSON } from './utils/export';
 import { useDrag } from './hooks/useDrag';
 import { encodeConfigToHash, decodeConfigFromHash } from './utils/shareConfig';
+import { sanitizeSvgFragment, sanitizeConfig } from './utils/safeSvg';
 
 // Components
 import LivePreview from './components/Preview/LivePreview';
@@ -106,7 +107,10 @@ const getInitialConfig = () => {
   }
 
   if (window.location.hash) {
-    const decoded = decodeConfigFromHash(window.location.hash);
+    const decoded = sanitizeConfig(
+      decodeConfigFromHash(window.location.hash),
+      { ...BASE_PRESETS[0].config, customSvgContent: '', customIconUrl: '' }
+    );
     if (decoded) {
       return decoded;
     }
@@ -279,9 +283,7 @@ const App = ({ mode }) => {
           const doc = parser.parseFromString(event.target.result, 'image/svg+xml');
           const svgEl = doc.querySelector('svg');
           if (svgEl) {
-            const scripts = svgEl.querySelectorAll('script');
-            scripts.forEach(s => s.remove());
-            setConfig(prev => ({ ...prev, customSvgContent: svgEl.innerHTML, iconMode: 'custom-svg' }));
+            setConfig(prev => ({ ...prev, customSvgContent: sanitizeSvgFragment(svgEl.innerHTML), iconMode: 'custom-svg' }));
             setToast({ open: true, message: 'SVG Icon Loaded', severity: 'success' });
             return;
           }
@@ -357,6 +359,7 @@ const App = ({ mode }) => {
               />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Typography
+                  component="h1"
                   variant="h6"
                   sx={{
                     lineHeight: 1,
@@ -531,7 +534,12 @@ const App = ({ mode }) => {
               >
                 DXBMARK LLC
               </Typography>
-              . All rights reserved.
+              . Open source under the MIT License. Third-party names, logos and icons belong to their respective owners.
+              {mode === 'dark' && (
+                <Box component="span" sx={{ ml: 1.5, color: 'primary.main', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                  ● DXBMARK Style
+                </Box>
+              )}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[

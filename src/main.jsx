@@ -22,10 +22,27 @@ link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700
 document.head.appendChild(link);
 
 function Root() {
-  const [mode, setMode] = useState('light');
+  // DXBMARK dark style is the default; light mode stays available and is remembered.
+  const [mode, setMode] = useState(() => {
+    try {
+      const saved = window.localStorage.getItem('bb_color_mode');
+      return saved === 'light' || saved === 'dark' ? saved : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
   const colorMode = useMemo(() => ({
-    toggleColorMode: () => setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light')),
+    toggleColorMode: () => setMode((prevMode) => {
+      const next = prevMode === 'light' ? 'dark' : 'light';
+      try { window.localStorage.setItem('bb_color_mode', next); } catch { /* storage unavailable */ }
+      return next;
+    }),
   }), []);
+
+  React.useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', mode === 'dark' ? '#0F172A' : '#F9FAFB');
+  }, [mode]);
 
   const theme = useMemo(() => getTheme(mode), [mode]);
 

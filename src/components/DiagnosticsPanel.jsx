@@ -57,7 +57,7 @@ const DiagnosticsPanel = ({ results }) => (
     </Box>
 
     {/* Footer hint */}
-    <Typography variant="caption" sx={{ display: 'block', mt: 2, color: 'text.disabled', fontSize: '0.65rem', fontStyle: 'italic' }}>
+    <Typography variant="caption" sx={{ display: 'block', mt: 2, color: 'text.secondary', fontSize: '0.7rem', fontStyle: 'italic' }}>
       Hover each indicator for details. Shields.io · GitHub · WCAG AA.
     </Typography>
   </Paper>

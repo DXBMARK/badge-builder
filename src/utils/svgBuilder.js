@@ -6,6 +6,7 @@
  */
 
 import { escapeXml, sanitize } from './sanitize';
+import { sanitizeSvgFragment, isSafeImageUrl } from './safeSvg';
 import { ICON_LIBRARY, LEGACY_ICON_MAP } from '../constants/icons';
 
 /**
@@ -84,9 +85,9 @@ export const buildSVG = (config) => {
 
   const renderIcon = () => {
     if (iconMode === 'custom-svg' && customSvgContent) {
-      return `<g data-drag="icon" style="cursor: grab;" transform="translate(${iX}, ${iY}) scale(${scaleY})" fill="${escapeXml(leftTextColor)}">${customSvgContent}</g>`;
+      return `<g data-drag="icon" style="cursor: grab;" transform="translate(${iX}, ${iY}) scale(${scaleY})" fill="${escapeXml(leftTextColor)}">${sanitizeSvgFragment(customSvgContent)}</g>`;
     }
-    if (iconMode === 'custom' && customIconUrl) {
+    if (iconMode === 'custom' && customIconUrl && isSafeImageUrl(customIconUrl)) {
       return `<image data-drag="icon" style="cursor: grab;" href="${escapeXml(customIconUrl)}" x="${iX}" y="${iY}" height="${24 * scaleY}" width="${24 * scaleY}" />`;
     }
     if (iconMode === 'preset' && iconType !== 'none') {
@@ -104,6 +105,9 @@ export const buildSVG = (config) => {
     }
     return '';
   };
+
+  safeWidth = Math.round(safeWidth * 100) / 100;
+  rightW = Math.round(rightW * 100) / 100;
 
   const svgString = `
 <svg width="${safeWidth}" height="${safeHeight}" viewBox="0 0 ${safeWidth} ${safeHeight}" xmlns="http://www.w3.org/2000/svg">
