@@ -30,6 +30,7 @@ const CHANGELOG = [
     ],
     changed: [
       'Footer reduced to the copyright line; licence and third-party notices live in the repository',
+      'Licence changed to the DXBMARK Proprietary License; support moved to dxbmark.com/support/badge-builder',
       'Logo and favicon recoloured to the DXBMARK orange',
       'Exported SVG is clean (no editor-only attributes) and uses rounded coordinates',
       'Text width is measured with the browser, so badge text no longer overflows its segment',

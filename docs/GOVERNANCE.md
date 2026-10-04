@@ -52,6 +52,8 @@ All icons must be localized within the project using the `ICON_LIBRARY`.
 3. **Data Immutability:** When applying a brand kit to the canvas, the object must be deeply copied or mapped properly to avoid reference contamination.
 
 ## 4. Submission & Contribution
+Badge Builder Pro is proprietary (see `LICENSE`). Changes are made by DXBMARK LLC only; external pull requests are not accepted. The rules below apply to maintainers.
+
 When adding a new Built-in Brand Kit to `src/constants/brands.js`:
 - The color palette must have a high contrast ratio to guarantee readability.
 - The ID must be unique.

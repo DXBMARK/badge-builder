@@ -1,21 +1,37 @@
-MIT License
+DXBMARK Proprietary License - All Rights Reserved
 
-Copyright (c) 2026 Tariq Said
+Copyright (c) 2026 DXBMARK LLC. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Badge Builder Pro (the "Software") is the proprietary property of DXBMARK LLC.
+The source code is made visible on GitHub for transparency only. Visibility is
+not a grant of any license.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. Permitted use. You may open and use the hosted application at
+   https://dxbmark.github.io/badge-builder/ for personal or business purposes,
+   and you own the badges you create with it.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+2. Restrictions. Without prior written permission from DXBMARK LLC you may not
+   copy, modify, merge, publish, distribute, sublicense, sell, host, or create
+   derivative works from the Software or any part of it, and you may not remove
+   or alter this notice or any copyright, trademark or attribution notice.
+
+3. Third-party components. The Software includes third-party open-source
+   components and assets that remain under their own licenses and belong to
+   their respective owners. See THIRD_PARTY_NOTICES.md. Nothing in this license
+   restricts rights you hold under those licenses.
+
+4. Trademarks. DXBMARK and the Badge Builder Pro name are trademarks of DXBMARK
+   LLC. Brand names, logos and icons that appear in generated badges belong to
+   their owners and are not affiliated with or endorsed by DXBMARK LLC.
+
+5. Earlier versions. Copies of the Software obtained before this license took
+   effect remain subject to the license under which they were received.
+
+6. No warranty. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR
+   A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL DXBMARK LLC BE
+   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR
+   ITS USE.
+
+Permission requests and licensing questions: info@dxbmark.com
+Support: https://www.dxbmark.com/support/badge-builder
