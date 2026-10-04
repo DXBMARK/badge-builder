@@ -5,14 +5,14 @@
   "type": "module",
   "description": "Generate your developer profile badges. A free tool to design professional badges for GitHub README files, tech stacks, and branding.",
   "author": "Tariq Said",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://dxbmark.github.io/badge-builder/",
   "repository": {
     "type": "git",
     "url": "https://github.com/DXBMark/badge-builder.git"
   },
   "bugs": {
-    "url": "https://github.com/DXBMark/badge-builder/issues"
+    "url": "https://www.dxbmark.com/support/badge-builder"
   },
   "keywords": [
     "svg",

@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-Badge Builder Pro is a DXBMARK LLC project released under the MIT License (see LICENSE).
+Badge Builder Pro is proprietary software of DXBMARK LLC (see LICENSE).
 It uses third-party software and assets that are NOT owned by DXBMARK LLC. Each remains
 under its own license and belongs to its respective owners.
 
@@ -18,4 +18,5 @@ respective owners. Their use here is for identification only and does not imply 
 with or endorsement by DXBMARK LLC.
 
 Exact versions and licenses of all npm dependencies are listed in package.json and
-package-lock.json. This file is informational and is not legal advice.
+package-lock.json. The DXBMARK Proprietary License does not apply to these third-party components;
+each keeps its own license. This file is informational and is not legal advice.

@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Logo and favicon recoloured to the DXBMARK orange
 - Exported SVG is clean (no editor-only attributes) and uses rounded coordinates
 - Text width is measured with the browser, so badge text no longer overflows its segment
+- Licence changed to the DXBMARK Proprietary License (all rights reserved); new README; support moved to dxbmark.com/support/badge-builder
 
 ### Fixed
 - PNG export blocked by the Content Security Policy (blob: images)

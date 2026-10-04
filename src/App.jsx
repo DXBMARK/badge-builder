@@ -417,7 +417,7 @@ const App = ({ mode }) => {
               <Menu anchorEl={helpAnchor} open={Boolean(helpAnchor)} onClose={() => setHelpAnchor(null)}>
                 {[
                   ['Documentation', 'https://github.com/DXBMARK/badge-builder#readme'],
-                  ['Report an issue', 'https://github.com/DXBMARK/badge-builder/issues'],
+                  ['Support', 'https://www.dxbmark.com/support/badge-builder'],
                   ['Contact DXBMARK', 'https://www.dxbmark.com/contact'],
                 ].map(([label, href]) => (
                   <MenuItem key={label} component="a" href={href} target="_blank" rel="noopener noreferrer" onClick={() => setHelpAnchor(null)}>{label}</MenuItem>
