@@ -15,6 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import { BASE_PRESETS } from '../../constants/presets';
 import { buildSVG } from '../../utils/svgBuilder';
+import { useNameDialog } from '../ui/NameDialog';
 
 const cloneConfig = (config) => {
   if (typeof structuredClone === 'function') {
@@ -120,6 +121,7 @@ const PresetCard = ({ preset, onApply, onDelete, isCustom = false }) => {
 
 const PresetsTab = ({ setConfig, customPresets, savePreset, deletePreset }) => {
   const [search, setSearch] = React.useState('');
+  const [nameDialog, askName] = useNameDialog();
 
   const filteredPresets = React.useMemo(() =>
     BASE_PRESETS.filter(p =>
@@ -139,17 +141,18 @@ const PresetsTab = ({ setConfig, customPresets, savePreset, deletePreset }) => {
 
   return (
     <Box sx={{ p: 1 }}>
+      {nameDialog}
       {/* Top row: Save button + Search inline */}
       <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
         <Button
           variant="contained"
           size="small"
           startIcon={<SaveIcon sx={{ fontSize: 14 }} />}
-          onClick={() => {
-            const name = prompt("Enter preset name:");
+          onClick={async () => {
+            const name = await askName('Save preset', 'Preset name');
             if (name) savePreset(name);
           }}
-          sx={{ py: 0.9, px: 1.5, borderRadius: 2.5, fontWeight: 800, flexShrink: 0, fontSize: '0.6rem', boxShadow: '0 4px 12px rgba(0,171,85,0.2)', whiteSpace: 'nowrap' }}
+          sx={{ py: 0.9, px: 1.5, borderRadius: 2.5, fontWeight: 800, flexShrink: 0, fontSize: '0.6rem', boxShadow: '0 4px 12px rgba(249,126,26,0.25)', whiteSpace: 'nowrap' }}
         >
           Save Preset
         </Button>
@@ -159,14 +162,14 @@ const PresetsTab = ({ setConfig, customPresets, savePreset, deletePreset }) => {
           placeholder="Search…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          InputProps={{
+          slotProps={{ input: {
             startAdornment: (
               <InputAdornment position="start">
                 <SearchIcon sx={{ color: 'text.disabled', fontSize: 16 }} />
               </InputAdornment>
             ),
             sx: { borderRadius: 2.5, bgcolor: 'background.neutral', fontSize: '0.75rem' },
-          }}
+          } }}
         />
       </Box>
 
@@ -178,7 +181,7 @@ const PresetsTab = ({ setConfig, customPresets, savePreset, deletePreset }) => {
           </Typography>
           <Grid container spacing={1.5}>
             {customList.map(p => (
-              <Grid item xs={12} sm={6} md={4} key={p.id}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={p.id}>
                 <PresetCard preset={p} onApply={setConfig} onDelete={deletePreset} isCustom />
               </Grid>
             ))}
@@ -193,7 +196,7 @@ const PresetsTab = ({ setConfig, customPresets, savePreset, deletePreset }) => {
       </Typography>
       <Grid container spacing={1.5}>
         {filteredPresets.map(p => (
-          <Grid item xs={12} sm={6} md={4} key={p.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={p.id}>
             <PresetCard preset={p} onApply={setConfig} />
           </Grid>
         ))}

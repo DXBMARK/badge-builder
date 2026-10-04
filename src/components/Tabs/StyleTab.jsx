@@ -5,11 +5,8 @@
  * Notes: Fixed Outline & Border section design. Shields.io compliant colors.
  */
 
-import React from 'react';
-import { Box, Typography, Switch, FormControlLabel, Divider, Slider, Paper, Tooltip } from '@mui/material';
+import { Box, Typography, Switch, FormControlLabel, Divider, Slider, Tooltip } from '@mui/material';
 import InputField from '../ui/InputField';
-import BorderStyleIcon from '@mui/icons-material/BorderStyle';
-import RoundedCornerIcon from '@mui/icons-material/RoundedCorner';
 
 /**
  * [TS] Helper to render a color field with a visible label and swatch.
@@ -163,7 +160,7 @@ const StyleTab = ({ config, update }) => (
             Outline
           </Typography>
           <Typography variant="caption" sx={{ fontFamily: '"Fira Code", monospace', fontWeight: 800, color: 'primary.main', fontSize: '0.7rem' }}>
-            {Number(config.outlineWidth).toFixed(1)}px
+            {(Number(config.outlineWidth) || 0).toFixed(1)}px
           </Typography>
         </Box>
         <Slider
@@ -180,7 +177,7 @@ const StyleTab = ({ config, update }) => (
 
     {/* Outline Color */}
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
-      <ColorField label="Outline Color" value={config.outlineColor} onChange={v => update('outlineColor', v)} />
+      <ColorField label="Outline Color" value={config.outlineColor || '#d0d7de'} onChange={v => update('outlineColor', v)} />
     </Box>
 
   </Box>

@@ -65,14 +65,14 @@ const IconTab = ({ config, update, onFileUpload }) => {
             placeholder="Search icons… e.g. react, cloud, db"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            InputProps={{
+            slotProps={{ input: {
               startAdornment: (
                 <InputAdornment position="start">
                   <SearchIcon sx={{ fontSize: 18 }} />
                 </InputAdornment>
               ),
               sx: { borderRadius: 3, bgcolor: 'background.neutral' },
-            }}
+            } }}
           />
 
           {/* Result count */}
@@ -174,12 +174,12 @@ const IconTab = ({ config, update, onFileUpload }) => {
       <Box sx={{ mt: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="overline" sx={{ fontWeight: 800, color: 'text.secondary' }}>Icon Scale</Typography>
-          <Typography variant="overline" sx={{ fontWeight: 900, color: 'primary.main' }}>{config.iconScale}x</Typography>
+          <Typography variant="overline" sx={{ fontWeight: 900, color: 'primary.main' }}>{Number(config.iconScale) || 1}x</Typography>
         </Box>
         <Slider
           size="small"
           min={0.1} max={3} step={0.1}
-          value={Number(config.iconScale)}
+          value={Number(config.iconScale) || 1}
           onChange={(_, v) => update('iconScale', v)}
           valueLabelDisplay="auto"
         />

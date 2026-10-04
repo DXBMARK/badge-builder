@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Box, Typography, Paper, IconButton, Tooltip, Stack, Grid, ToggleButtonGroup, ToggleButton, Divider, Button, Alert } from '@mui/material';
+import { Box, Typography, Paper, IconButton, Stack, Grid, ToggleButtonGroup, ToggleButton, Button, Alert } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import InputField from '../ui/InputField';
 
@@ -22,8 +22,6 @@ const GitHubTab = ({ context, setContext, onCopy }) => {
 
   const update = (key, val) => setContext(p => ({ ...p, [key]: val }));
 
-  // Sanitize URL path segments: trim whitespace, encode where needed
-  const seg = (v) => encodeURIComponent((v || '').trim());
   // GitHub Actions workflow filename should NOT be double-encoded (path segment, not query value)
   const plain = (v) => (v || '').trim().replace(/\s+/g, '-');
 
@@ -90,11 +88,11 @@ ${stackBadges}
       {mode === 'project' ? (
         <Box>
           <Grid container spacing={1.5} sx={{ mb: 4 }}>
-            <Grid item xs={6}><InputField label="Owner / Org" value={ctx.user} onChange={v => update('user', v)} /></Grid>
-            <Grid item xs={6}><InputField label="Repository" value={ctx.repo} onChange={v => update('repo', v)} /></Grid>
-            <Grid item xs={4}><InputField label="Branch" value={ctx.branch} onChange={v => update('branch', v)} /></Grid>
-            <Grid item xs={8}><InputField label="Workflow File" value={ctx.workflow} onChange={v => update('workflow', v)} /></Grid>
-            <Grid item xs={12}><InputField label="Shields Style (e.g. flat, for-the-badge)" value={ctx.style} onChange={v => update('style', v)} /></Grid>
+            <Grid size={{ xs: 6 }}><InputField label="Owner / Org" value={ctx.user} onChange={v => update('user', v)} /></Grid>
+            <Grid size={{ xs: 6 }}><InputField label="Repository" value={ctx.repo} onChange={v => update('repo', v)} /></Grid>
+            <Grid size={{ xs: 4 }}><InputField label="Branch" value={ctx.branch} onChange={v => update('branch', v)} /></Grid>
+            <Grid size={{ xs: 8 }}><InputField label="Workflow File" value={ctx.workflow} onChange={v => update('workflow', v)} /></Grid>
+            <Grid size={{ xs: 12 }}><InputField label="Shields Style (e.g. flat, for-the-badge)" value={ctx.style} onChange={v => update('style', v)} /></Grid>
           </Grid>
           
           {(!ctx.user?.trim() || !ctx.repo?.trim()) && (
@@ -129,11 +127,11 @@ ${stackBadges}
       ) : (
         <Box>
           <Grid container spacing={1.5} sx={{ mb: 4 }}>
-            <Grid item xs={6}><InputField label="GitHub Username" value={ctx.user} onChange={v => update('user', v)} /></Grid>
-            <Grid item xs={6}><InputField label="Display Name" value={ctx.profileName} onChange={v => update('profileName', v)} /></Grid>
-            <Grid item xs={12}><InputField label="Tech Stack (comma separated)" value={ctx.stack} onChange={v => update('stack', v)} /></Grid>
-            <Grid item xs={6}><InputField label="LinkedIn Username" value={ctx.linkedin} onChange={v => update('linkedin', v)} /></Grid>
-            <Grid item xs={6}><InputField label="Portfolio URL" value={ctx.portfolio} onChange={v => update('portfolio', v)} /></Grid>
+            <Grid size={{ xs: 6 }}><InputField label="GitHub Username" value={ctx.user} onChange={v => update('user', v)} /></Grid>
+            <Grid size={{ xs: 6 }}><InputField label="Display Name" value={ctx.profileName} onChange={v => update('profileName', v)} /></Grid>
+            <Grid size={{ xs: 12 }}><InputField label="Tech Stack (comma separated)" value={ctx.stack} onChange={v => update('stack', v)} /></Grid>
+            <Grid size={{ xs: 6 }}><InputField label="LinkedIn Username" value={ctx.linkedin} onChange={v => update('linkedin', v)} /></Grid>
+            <Grid size={{ xs: 6 }}><InputField label="Portfolio URL" value={ctx.portfolio} onChange={v => update('portfolio', v)} /></Grid>
           </Grid>
 
           <Paper variant="outlined" sx={{ p: 2, bgcolor: 'background.neutral', position: 'relative' }}>

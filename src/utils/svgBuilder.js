@@ -14,7 +14,52 @@ import { ICON_LIBRARY, LEGACY_ICON_MAP } from '../constants/icons';
  * @param {Object} config
  * @returns {Object} { svg, width, height }
  */
-export const buildSVG = (config) => {
+const BUILD_DEFAULTS = {
+  width: 140, height: 32, leftWidth: 70, borderRadius: 6,
+  leftBg: '#334155', rightBg: '#F97E1A', useGradient: false,
+  leftText: 'Badge', rightText: 'Value',
+  leftFontSize: 13, rightFontSize: 13, leftFontWeight: '700', rightFontWeight: '700',
+  fontFamily: 'Inter, sans-serif', iconType: 'none', iconMode: 'preset', iconScale: 1,
+  autoWidth: true, smartAlign: true,
+};
+
+
+let measureCtx;
+const measureText = (text, size, weight, family) => {
+  const str = text || '';
+  const w = Number(weight) || (weight === 'bold' ? 700 : 400);
+  const factor = w >= 800 ? 0.62 : w >= 600 ? 0.58 : 0.55;
+  const estimate = str.length * size * factor;
+  try {
+    if (typeof document !== 'undefined') {
+      measureCtx = measureCtx || document.createElement('canvas').getContext('2d');
+      if (measureCtx) {
+        measureCtx.font = `${w} ${size}px ${family || 'sans-serif'}`;
+        // Never go below 92% of the estimate: the web font may not be loaded yet.
+        return Math.max(measureCtx.measureText(str).width * 1.04, estimate * 0.92);
+      }
+    }
+  } catch { /* fall through to estimate */ }
+  return estimate;
+};
+
+/** Black or white, whichever reads better on the given hex background. */
+const contrastText = (hex) => {
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(String(hex || '').trim());
+  if (!m) return '#FFFFFF';
+  let h = m[1];
+  if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
+    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? '#0F172A' : '#FFFFFF';
+};
+
+export const buildSVG = (input) => {
+  // Presets, packs and bulk rows may be partial: fill gaps so no value turns into NaN.
+  const defined = Object.fromEntries(Object.entries(input || {}).filter(([, v]) => v !== undefined && v !== null));
+  const config = { ...BUILD_DEFAULTS, ...defined };
+  if (defined.leftTextColor === undefined) config.leftTextColor = contrastText(config.leftBg);
+  if (defined.rightTextColor === undefined) config.rightTextColor = contrastText(config.rightBg);
   const {
     width, height, leftWidth, borderRadius, leftBg, rightBg, 
     useGradient, gradStart, gradEnd, leftText, rightText,
@@ -32,11 +77,9 @@ export const buildSVG = (config) => {
   const iconW = hasIcon ? (14 * sanitize(iconScale, 0.1, 5)) : 0;
   const gap = hasIcon && leftText ? 6 : 0;
   
-  // Approximate text width (Inter font average char width is ~0.55 of font size)
-  const calcTextWidth = (text, size, weight) => {
-    const baseW = (text || '').length * size * 0.55;
-    return weight === 'bold' || weight >= 700 ? baseW * 1.1 : baseW;
-  };
+  // Text width: measure with the browser when possible (accurate for the loaded font),
+  // otherwise fall back to a weight-aware estimate. Padding keeps text off the edges.
+  const calcTextWidth = (text, size, weight) => measureText(text, size, weight, fontFamily);
 
   const lTextW = calcTextWidth(leftText, leftFontSize, leftFontWeight);
   const rTextW = calcTextWidth(rightText, rightFontSize, rightFontWeight);
@@ -55,7 +98,7 @@ export const buildSVG = (config) => {
   const scaleY = sanitize(iconScale, 0.1, 5);
 
   // Smart Alignment Calculation
-  let iX = 0, iY = 0, lTextX = 0, lTextY = 0, rTextX = 0, rTextY = 0;
+  let iX = 0, iY = 0, lTextX, lTextY, rTextX, rTextY;
 
   if (smartAlign !== false) {
     // Center block in Left
@@ -106,8 +149,12 @@ export const buildSVG = (config) => {
     return '';
   };
 
-  safeWidth = Math.round(safeWidth * 100) / 100;
-  rightW = Math.round(rightW * 100) / 100;
+  const rnd = (n) => Math.round(n * 100) / 100;
+  safeWidth = rnd(safeWidth);
+  rightW = rnd(rightW);
+  safeLeftWidth = rnd(safeLeftWidth);
+  iX = rnd(iX); iY = rnd(iY);
+  lTextX = rnd(lTextX); lTextY = rnd(lTextY); rTextX = rnd(rTextX); rTextY = rnd(rTextY);
 
   const svgString = `
 <svg width="${safeWidth}" height="${safeHeight}" viewBox="0 0 ${safeWidth} ${safeHeight}" xmlns="http://www.w3.org/2000/svg">
@@ -131,5 +178,7 @@ export const buildSVG = (config) => {
   </g>
 </svg>`.trim();
 
-  return { svg: svgString, width: safeWidth, height: safeHeight };
+  // Editor-only drag hooks stay in the live preview; exported SVG is clean.
+  const cleanSvg = svgString.replace(/ data-drag="[^"]*"/g, '').replace(/ style="cursor: grab;"/g, '');
+  return { svg: cleanSvg, editorSvg: svgString, width: safeWidth, height: safeHeight, leftWidth: safeLeftWidth };
 };

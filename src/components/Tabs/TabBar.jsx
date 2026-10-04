@@ -5,7 +5,6 @@
  * Notes: Follow TS conventions.
  */
 
-import React from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';

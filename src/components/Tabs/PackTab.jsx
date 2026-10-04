@@ -5,11 +5,12 @@
  * Notes: Design aligned with BrandTab. Supports Local, External, Preset item types.
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNameDialog } from '../ui/NameDialog';
+import { useState, useEffect, useRef } from 'react';
 import {
   Box, Typography, Button, Paper, Stack, IconButton, Tooltip, Grid,
   Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField,
-  Divider, MenuItem, Select, FormControl, InputLabel,
+  MenuItem, Select, FormControl,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -50,7 +51,7 @@ const PackCard = ({ pack, onLoad }) => (
     </Box>
 
     {/* Badge preview row — local items only */}
-    <Stack direction="row" flexWrap="wrap" spacing={0.5} sx={{ mb: 1, minHeight: 18 }}>
+    <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', mb: 1, minHeight: 18 }}>
       {pack.items.filter(i => i.kind === 'local').slice(0, 3).map((item, idx) => {
         const svgData = buildSVG(normalizePresetConfig(item.config));
         return (
@@ -84,7 +85,7 @@ const ItemRow = ({ item, index, total, onMoveUp, onMoveDown, onDuplicate, onRemo
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1.5, py: 1 }}>
       {/* Left: number + preview + label */}
-      <Stack direction="row" spacing={1.5} alignItems="center" sx={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0, flex: 1, overflow: 'hidden' }}>
         <Typography variant="caption" sx={{ fontWeight: 900, color: 'text.disabled', fontSize: '0.6rem', width: 14, flexShrink: 0 }}>
           {index + 1}
         </Typography>
@@ -151,7 +152,14 @@ const ItemRow = ({ item, index, total, onMoveUp, onMoveDown, onDuplicate, onRemo
 
 // ─── Main Tab ─────────────────────────────────────────────────────────────────
 const PackTab = ({ config, onCopy, onLoadBadge }) => {
-  const [pack, setPack] = useState([]);
+  const [nameDialog, askName] = useNameDialog();
+  const [pack, setPack] = useState(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_CURRENT);
+      const parsed = stored ? JSON.parse(stored) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch { return []; }
+  });
   const [loadModal, setLoadModal] = useState(null); // { pack, inputs: {} }
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [outputMode, setOutputMode] = useState('inline');
@@ -159,14 +167,7 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
 
   // ── Persist / restore current pack ──────────────────────────────────────
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_CURRENT);
-      if (stored) setPack(JSON.parse(stored));
-    } catch(e) {}
-  }, []);
-
-  useEffect(() => {
-    try { localStorage.setItem(STORAGE_CURRENT, JSON.stringify(pack)); } catch(e) {}
+    try { localStorage.setItem(STORAGE_CURRENT, JSON.stringify(pack)); } catch { /* storage unavailable */ }
   }, [pack]);
 
   // ── Pack mutations ───────────────────────────────────────────────────────
@@ -230,15 +231,15 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
   };
 
   // ── Save / Export / Import ────────────────────────────────────────────────
-  const savePack = () => {
-    const name = window.prompt('Name this pack:');
+  const savePack = async () => {
+    const name = await askName('Save pack', 'Pack name');
     if (!name) return;
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_SAVED) || '{}');
       saved[name] = pack;
       localStorage.setItem(STORAGE_SAVED, JSON.stringify(saved));
       onCopy('', `Pack "${name}" Saved`);
-    } catch(e) {}
+    } catch { /* storage unavailable */ }
   };
 
   const exportPack = () => downloadJSON({ name: 'Custom Pack', items: pack }, 'badge-pack.json');
@@ -255,7 +256,7 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
           setPack(hydrated);
           onCopy('', 'Pack Imported');
         }
-      } catch(e) { onCopy('', 'Import Failed'); }
+      } catch { onCopy('', 'Import Failed'); }
     };
     reader.readAsText(file);
     e.target.value = '';
@@ -288,10 +289,11 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
 
   return (
     <Box sx={{ p: 1 }}>
+      {nameDialog}
       {/* Primary Action */}
       <Button fullWidth variant="contained" size="large" startIcon={<CollectionsIcon />}
         onClick={addToPack}
-        sx={{ mb: 2.5, py: 1, borderRadius: 2.5, fontWeight: 800, boxShadow: '0 4px 12px rgba(0,171,85,0.2)' }}
+        sx={{ mb: 2.5, py: 1, borderRadius: 2.5, fontWeight: 800, boxShadow: '0 4px 12px rgba(249,126,26,0.25)' }}
       >
         Add Current Badge to Pack
       </Button>
@@ -300,7 +302,7 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
       {pack.length > 0 ? (
         <Box sx={{ mb: 2 }}>
           {/* Pack header bar */}
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+          <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="overline" sx={{ fontWeight: 900, color: 'text.secondary', fontSize: '0.6rem' }}>
               Current Pack · {pack.length} {pack.length === 1 ? 'badge' : 'badges'}
             </Typography>
@@ -330,7 +332,7 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
           </Paper>
 
           {/* Output mode + copy */}
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
             <FormControl size="small" sx={{ minWidth: 110 }}>
               <Select
                 value={outputMode}
@@ -351,7 +353,7 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
           </Stack>
 
           {/* Pack-level actions */}
-          <Stack direction="row" spacing={0.75} flexWrap="wrap" useFlexGap>
+          <Stack direction="row" spacing={0.75} useFlexGap sx={{ flexWrap: 'wrap' }}>
             <Tooltip title="Apply current brand colors to all local badges">
               <Button size="small" variant="outlined" startIcon={<ColorLensIcon sx={{ fontSize: '0.75rem !important' }} />}
                 onClick={applyBrand}
@@ -402,7 +404,7 @@ const PackTab = ({ config, onCopy, onLoadBadge }) => {
       </Typography>
       <Grid container spacing={1.5}>
         {BUILT_IN_PACKS.map(builtin => (
-          <Grid item xs={6} key={builtin.id}>
+          <Grid size={{ xs: 6 }} key={builtin.id}>
             <PackCard pack={builtin} onLoad={handleBuiltInLoad} />
           </Grid>
         ))}

@@ -4,11 +4,11 @@
  * Purpose: Workspace Data Management (Import/Export)
  */
 
-import React, { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   Button, Box, Typography, Divider, IconButton,
-  Stack, Card, CardContent
+  Stack, Card, CardContent, Alert
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
@@ -18,6 +18,7 @@ import { downloadJSON } from '../utils/export';
 
 const WorkspaceModal = ({ open, onClose, config, customPresets, customBrands, onRestoreWorkspace }) => {
   const fileInputRef = useRef(null);
+  const [importError, setImportError] = useState('');
 
   const handleExportWorkspace = () => {
     const payload = {
@@ -36,10 +37,6 @@ const WorkspaceModal = ({ open, onClose, config, customPresets, customBrands, on
     downloadJSON(customPresets, 'badge-presets.json');
   };
 
-  const handleExportBrands = () => {
-    downloadJSON(customBrands, 'badge-brand-kits.json');
-  };
-
   const handleImportFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -50,14 +47,15 @@ const WorkspaceModal = ({ open, onClose, config, customPresets, customBrands, on
         const data = JSON.parse(ev.target.result);
         
         // Validation check
-        if (data.workspace) {
+        if (data && typeof data === 'object' && data.workspace && typeof data.workspace === 'object') {
+          setImportError('');
           // Full workspace restore
           onRestoreWorkspace(data.workspace);
         } else {
-          alert('Invalid Workspace file structure or version mismatch.');
+          setImportError('Invalid workspace file: structure or version mismatch.');
         }
-      } catch (err) {
-        alert('Failed to parse JSON file.');
+      } catch {
+        setImportError('Could not read the file. Choose a valid workspace JSON export.');
       }
     };
     reader.readAsText(file);
@@ -65,7 +63,7 @@ const WorkspaceModal = ({ open, onClose, config, customPresets, customBrands, on
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth slotProps={{ paper: { sx: { borderRadius: 3 } } }}>
       <DialogTitle sx={{ pb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
         <CloudDownloadIcon color="primary" fontSize="small" />
         <Typography variant="h6" component="span" sx={{ fontWeight: 900, flexGrow: 1 }}>
@@ -82,6 +80,8 @@ const WorkspaceModal = ({ open, onClose, config, customPresets, customBrands, on
         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           Because Badge Builder Pro runs completely in your browser without a backend or server database, your custom Presets and Brand Kits are saved to your local storage. To migrate your setup or share it, you can export and import your full Workspace.
         </Typography>
+
+        {importError && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setImportError('')}>{importError}</Alert>}
 
         <Stack spacing={2}>
           <Card variant="outlined" sx={{ borderRadius: 2 }}>

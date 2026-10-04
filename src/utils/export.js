@@ -33,8 +33,8 @@ export const downloadPNG = (svgContent, width, height, fileName = 'badge.png', s
   ctx.scale(scale, scale);
 
   const img = new Image();
-  const svgBlob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
-  const url = URL.createObjectURL(svgBlob);
+  // A data URI (not a blob: URL) so it passes the page's img-src Content Security Policy.
+  const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgContent)}`;
 
   img.onload = () => {
     ctx.drawImage(img, 0, 0, width, height);
@@ -45,7 +45,10 @@ export const downloadPNG = (svgContent, width, height, fileName = 'badge.png', s
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  };
+
+  img.onerror = () => {
+    console.error('[Badge Builder] PNG export failed: the SVG could not be rasterised.');
   };
 
   img.src = url;

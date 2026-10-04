@@ -46,12 +46,16 @@ const createMarkdownSnippet = (config) => {
 
 const LivePreview = ({ svg, config, onDragStart, dragState, statusMsg, onCopy }) => {
   const [zoom, setZoom] = React.useState(1);
-  const [bgMode, setBgMode] = React.useState('transparent');
+  const [bgMode, setBgMode] = React.useState('github');
   const [previewMode, setPreviewMode] = React.useState('single'); // 'single', 'readme', 'profile'
   
   const isDragging = !!dragState;
   const isReadmePreview = previewMode === 'readme';
   const isDarkPreview = bgMode === 'dark';
+  // GitHub-style mock surfaces follow the selected preview background, not the app theme.
+  const gh = isDarkPreview
+    ? { card: '#0d1117', border: '#30363d', rule: '#21262d', link: '#58a6ff', skel: 'rgba(240,246,252,0.14)', tile: 'rgba(240,246,252,0.07)', banner: '#161b22', shadow: '0 0 0 1px rgba(48,54,61,0.9), 0 12px 30px rgba(0,0,0,0.45)' }
+    : { card: '#ffffff', border: '#d0d7de', rule: '#e1e4e8', link: '#0969da', skel: 'rgba(31,35,40,0.14)', tile: 'rgba(31,35,40,0.06)', banner: '#eaeef2', shadow: '0 0 0 1px rgba(208,215,222,0.8), 0 12px 30px rgba(31,35,40,0.08)' };
 
   const handleZoom = (delta) => setZoom(prev => Math.min(Math.max(prev + delta, 0.5), 3));
 
@@ -143,14 +147,14 @@ const LivePreview = ({ svg, config, onDragStart, dragState, statusMsg, onCopy })
         alignItems: 'center',
         gap: 2,
         p: previewMode === 'single' ? 0 : { xs: 2, sm: 4, md: 6 },
-        bgcolor: isReadmePreview ? '#ffffff' : 'transparent',
+        bgcolor: isReadmePreview ? gh.card : 'transparent',
         borderRadius: isReadmePreview ? 2 : 0,
         boxShadow: isReadmePreview
-          ? '0 0 0 1px rgba(208,215,222,0.8), 0 12px 30px rgba(31,35,40,0.08)'
+          ? gh.shadow
           : isDarkPreview
             ? '0 18px 35px rgba(0,0,0,0.35)'
             : 'none',
-        border: isReadmePreview ? '1px solid #d0d7de' : 'none',
+        border: isReadmePreview ? `1px solid ${gh.border}` : 'none',
         maxWidth: { xs: '100%', sm: '90%' }
       }}>
         {/* Overlay grid when dragging */}
@@ -159,13 +163,13 @@ const LivePreview = ({ svg, config, onDragStart, dragState, statusMsg, onCopy })
             position: 'absolute', inset: -20, 
             border: '2px dashed', borderColor: 'primary.main', 
             borderRadius: 2, pointerEvents: 'none', opacity: 0.5,
-            background: 'rgba(0,171,85,0.02)'
+            background: 'rgba(249,126,26,0.04)'
           }} />
         )}
         
         {isReadmePreview && (
-          <Box sx={{ mb: 2, borderBottom: '1px solid #e1e4e8', pb: 1, width: '100%', minWidth: { xs: 240, sm: 300 } }}>
-            <Typography sx={{ fontWeight: 600, fontSize: 14, color: '#0366d6', display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ mb: 2, borderBottom: `1px solid ${gh.rule}`, pb: 1, width: '100%', minWidth: { xs: 240, sm: 300 } }}>
+            <Typography sx={{ fontWeight: 600, fontSize: 14, color: gh.link, display: 'flex', alignItems: 'center', gap: 1 }}>
               <MenuBookIcon sx={{ fontSize: 16 }} /> README.md
             </Typography>
           </Box>
@@ -185,14 +189,13 @@ const LivePreview = ({ svg, config, onDragStart, dragState, statusMsg, onCopy })
               minWidth: { xs: 260, sm: 320 },
               maxWidth: 420,
               borderRadius: 3,
-              border: '1px solid',
-              borderColor: 'divider',
-              bgcolor: 'background.paper',
-              boxShadow: '0 10px 28px rgba(15,23,42,0.08)',
+              border: `1px solid ${gh.border}`,
+              bgcolor: gh.card,
+              boxShadow: '0 10px 28px rgba(15,23,42,0.12)',
               overflow: 'hidden',
             }}
           >
-            <Box sx={{ height: 54, bgcolor: 'action.hover' }} />
+            <Box sx={{ height: 54, bgcolor: gh.banner }} />
             <Box sx={{ px: 2, pb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.5, mt: -2.5, mb: 1.5 }}>
                 <Box
@@ -200,15 +203,14 @@ const LivePreview = ({ svg, config, onDragStart, dragState, statusMsg, onCopy })
                     width: 44,
                     height: 44,
                     borderRadius: '50%',
-                    border: '3px solid',
-                    borderColor: 'background.paper',
-                    bgcolor: 'divider',
+                    border: `3px solid ${gh.card}`,
+                    bgcolor: gh.skel,
                     flexShrink: 0,
                   }}
                 />
                 <Box sx={{ flex: 1, pb: 0.5 }}>
-                  <Box sx={{ width: '42%', height: 10, borderRadius: 999, bgcolor: 'text.primary', opacity: 0.16, mb: 0.8 }} />
-                  <Box sx={{ width: '28%', height: 8, borderRadius: 999, bgcolor: 'text.primary', opacity: 0.1 }} />
+                  <Box sx={{ width: '42%', height: 10, borderRadius: 999, bgcolor: gh.skel, mb: 0.8 }} />
+                  <Box sx={{ width: '28%', height: 8, borderRadius: 999, bgcolor: gh.skel }} />
                 </Box>
               </Box>
 
@@ -217,9 +219,9 @@ const LivePreview = ({ svg, config, onDragStart, dragState, statusMsg, onCopy })
               </Box>
 
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
-                <Box sx={{ height: 42, borderRadius: 2, bgcolor: 'action.hover' }} />
-                <Box sx={{ height: 42, borderRadius: 2, bgcolor: 'action.hover' }} />
-                <Box sx={{ height: 42, borderRadius: 2, bgcolor: 'action.hover' }} />
+                <Box sx={{ height: 42, borderRadius: 2, bgcolor: gh.tile }} />
+                <Box sx={{ height: 42, borderRadius: 2, bgcolor: gh.tile }} />
+                <Box sx={{ height: 42, borderRadius: 2, bgcolor: gh.tile }} />
               </Box>
             </Box>
           </Box>

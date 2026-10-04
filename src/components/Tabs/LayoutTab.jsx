@@ -5,7 +5,6 @@
  * Notes: Follow TS conventions.
  */
 
-import React from 'react';
 import { Box, Typography, Divider, Switch, FormControlLabel } from '@mui/material';
 import InputField from '../ui/InputField';
 

@@ -6,21 +6,7 @@
  */
 
 import { useState, useMemo, useEffect, useCallback, useContext } from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Button, 
-  AppBar, 
-  Toolbar, 
-  Snackbar, 
-  Alert, 
-  IconButton, 
-  Link,
-  Paper,
-  Stack,
-  Chip
-} from '@mui/material';
+import { Box, Container, Typography, Button, AppBar, Toolbar, Snackbar, Alert, IconButton, Link, Paper, Stack, Chip, Menu, MenuItem, Divider } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import DownloadIcon from '@mui/icons-material/Download';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -28,9 +14,10 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import ShareIcon from '@mui/icons-material/Share';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutlined';
 
 // Context
-import { ColorModeContext } from './main';
+import { ColorModeContext } from './colorModeContext';
 
 // Constants & Tools
 import { BASE_PRESETS } from './constants/presets';
@@ -55,6 +42,7 @@ import ExportModal from './components/ExportModal';
 import ChangelogModal from './components/ChangelogModal';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
 import { runDiagnostics } from './core/diagnostics';
+import { createMarkdownSnippet, createHtmlSnippet } from './utils/snippets';
 import BrandTab from './components/Tabs/BrandTab';
 import PackTab from './components/Tabs/PackTab';
 import WorkspaceModal from './components/WorkspaceModal';
@@ -65,27 +53,6 @@ const cloneConfig = (value) => {
   }
 
   return JSON.parse(JSON.stringify(value));
-};
-
-const getBadgeLabel = (config) => config.leftText || 'Badge';
-const getBadgeValue = (config) => config.rightText || 'Value';
-const getBadgeColor = (config) => (config.rightBg || '#4c1').replace('#', '');
-
-const createMarkdownSnippet = (config) => {
-  const label = getBadgeLabel(config);
-  const value = getBadgeValue(config);
-  const color = getBadgeColor(config);
-
-  return `![${label}](https://img.shields.io/badge/${encodeURIComponent(label)}-${encodeURIComponent(value)}-${color})`;
-};
-
-const createHtmlSnippet = (svg, config) => {
-  const label = getBadgeLabel(config);
-  const bytes = new TextEncoder().encode(svg);
-  const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join('');
-  const safeB64 = btoa(binString);
-
-  return `<img src="data:image/svg+xml;base64,${safeB64}" alt="${label}" />`;
 };
 
 const readStoredJson = (key, fallback) => {
@@ -144,6 +111,7 @@ const App = ({ mode }) => {
   const [toast, setToast] = useState({ open: false, message: '', severity: 'info' });
   const [showExport, setShowExport] = useState(false);
   const [showChangelog, setShowChangelog] = useState(false);
+  const [helpAnchor, setHelpAnchor] = useState(null);
   const [showWorkspace, setShowWorkspace] = useState(false);
   const [gitHubContext, setGitHubContext] = useState({ 
     user: 'DXBMark', 
@@ -173,22 +141,32 @@ const App = ({ mode }) => {
 
   // Phase 8: Workspace Restore
   const handleRestoreWorkspace = useCallback((data) => {
-    if (data.presets) {
-      setCustomPresets(data.presets);
-      persistJson('ts_badge_presets_mui', data.presets);
+    // Accept both the current export keys (customPresets/customBrands) and the older ones.
+    const presets = data.customPresets || data.presets;
+    const brands = data.customBrands || data.brands;
+    const isPlainObject = (v) => v && typeof v === 'object' && !Array.isArray(v);
+    const safeDefaults = { ...BASE_PRESETS[0].config, customSvgContent: '', customIconUrl: '' };
+    const cleanMap = (map) => Object.fromEntries(
+      Object.entries(map).slice(0, 200).map(([name, value]) => [String(name).slice(0, 60), isPlainObject(value) && isPlainObject(value.config) ? { ...value, config: sanitizeConfig(value.config, safeDefaults) } : isPlainObject(value) ? sanitizeConfig(value, safeDefaults) : value])
+    );
+    if (isPlainObject(presets)) {
+      const clean = cleanMap(presets);
+      setCustomPresets(clean);
+      persistJson('ts_badge_presets_mui', clean);
     }
-    if (data.brands) {
-      setCustomBrands(data.brands);
-      persistJson('ts_badge_brands_mui', data.brands);
+    if (isPlainObject(brands)) {
+      setCustomBrands(brands);
+      persistJson('ts_badge_brands_mui', brands);
     }
-    if (data.pack) {
+    if (Array.isArray(data.pack)) {
       persistJson('bbp.currentPack', data.pack);
     }
-    if (data.config) {
-      setConfig(data.config);
-      persistJson('ts_badge_current', data.config);
+    if (isPlainObject(data.config)) {
+      const clean = sanitizeConfig(data.config, safeDefaults);
+      setConfig(clean);
+      persistJson('ts_badge_current', clean);
     }
-    setToast({ open: true, message: 'Workspace Restored Successfully!', severity: 'success' });
+    setToast({ open: true, message: 'Workspace restored', severity: 'success' });
   }, []);
 
   // Auto-save current badge whenever config changes
@@ -249,8 +227,11 @@ const App = ({ mode }) => {
   const badgeData = useMemo(() => buildSVG(config), [config]);
 
   const diagnostics = useMemo(
-    () => runDiagnostics(config, badgeData.svg),
-    [config, badgeData.svg]
+    () => runDiagnostics(
+      { ...config, width: badgeData.width, height: badgeData.height, leftWidth: badgeData.leftWidth },
+      badgeData.svg
+    ),
+    [config, badgeData]
   );
 
   /*
@@ -387,7 +368,7 @@ const App = ({ mode }) => {
             </Box>
 
             {/* ── Toolbar actions ────────────────────────────── */}
-            <Stack direction="row" spacing={{ xs: 0.5, sm: 1.5 }} alignItems="center">
+            <Stack direction="row" spacing={{ xs: 0.5, sm: 1.5 }} sx={{ alignItems: 'center' }}>
               {/* Share — hidden on xs */}
               <IconButton
                 onClick={handleShareUrl}
@@ -423,10 +404,38 @@ const App = ({ mode }) => {
                 {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
               </IconButton>
 
+              {/* Help & support */}
+              <IconButton
+                onClick={(e) => setHelpAnchor(e.currentTarget)}
+                title="Help & support"
+                aria-label="Help and support"
+                aria-haspopup="menu"
+                sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main', bgcolor: 'action.hover' } }}
+              >
+                <HelpOutlineIcon />
+              </IconButton>
+              <Menu anchorEl={helpAnchor} open={Boolean(helpAnchor)} onClose={() => setHelpAnchor(null)}>
+                {[
+                  ['Documentation', 'https://github.com/DXBMARK/badge-builder#readme'],
+                  ['Report an issue', 'https://github.com/DXBMARK/badge-builder/issues'],
+                  ['Contact DXBMARK', 'https://www.dxbmark.com/contact'],
+                ].map(([label, href]) => (
+                  <MenuItem key={label} component="a" href={href} target="_blank" rel="noopener noreferrer" onClick={() => setHelpAnchor(null)}>{label}</MenuItem>
+                ))}
+                <MenuItem onClick={() => { setHelpAnchor(null); setShowChangelog(true); }}>What&apos;s new</MenuItem>
+                <Divider />
+                {[
+                  ['Terms', 'https://www.dxbmark.com/legal/terms-of-service'],
+                  ['Privacy', 'https://www.dxbmark.com/legal/privacy-policy'],
+                ].map(([label, href]) => (
+                  <MenuItem key={label} component="a" href={href} target="_blank" rel="noopener noreferrer" onClick={() => setHelpAnchor(null)} sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>{label}</MenuItem>
+                ))}
+              </Menu>
+
               {/* GitHub — hidden on xs */}
               <IconButton
                 component={Link}
-                href="https://github.com/DXBMark/badge-builder.git"
+                href="https://github.com/DXBMARK/badge-builder"
                 target="_blank"
                 sx={{ color: 'text.secondary', display: { xs: 'none', md: 'inline-flex' }, '&:hover': { color: 'primary.main', bgcolor: 'action.hover' } }}
               >
@@ -458,12 +467,12 @@ const App = ({ mode }) => {
       {/* Main content — natural page scroll */}
       <Box sx={{ flex: 1 }}>
         <Container maxWidth="xl" sx={{ py: 3 }}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '7fr 5fr' }, gap: 4, alignItems: 'start' }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'minmax(0, 5fr) minmax(0, 6fr)' }, gap: 4, alignItems: 'start' }}>
 
             {/* Left column — Preview + Source */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <LivePreview 
-                svg={badgeData.svg} 
+                svg={badgeData.editorSvg} 
                 config={config}
                 onDragStart={handleDragStart} 
                 dragState={dragState}
@@ -519,56 +528,22 @@ const App = ({ mode }) => {
       </Box>
 
       {/* Footer */}
-      <Box component="footer" sx={{ mt: 'auto', py: 3, borderTop: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>
+      <Box component="footer" sx={{ mt: 'auto', py: 2.5, borderTop: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>
         <Container maxWidth="xl">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, textAlign: { xs: 'center', sm: 'left' } }}>
-            <Typography variant="caption" sx={{ color: 'text.disabled', fontWeight: 700 }}>
-              © {new Date().getFullYear()} Badge Builder Pro by{' '}
-              <Typography
-                component="a"
-                href="https://www.dxbmark.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="caption"
-                sx={{ color: 'inherit', fontWeight: 700, textDecoration: 'none', '&:hover': { color: 'primary.main', textDecoration: 'underline' } }}
-              >
-                DXBMARK LLC
-              </Typography>
-              . Open source under the MIT License. Third-party names, logos and icons belong to their respective owners.
-              {mode === 'dark' && (
-                <Box component="span" sx={{ ml: 1.5, color: 'primary.main', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                  ● DXBMARK Style
-                </Box>
-              )}
+          <Typography variant="caption" component="p" sx={{ color: 'text.secondary', fontWeight: 600, textAlign: 'center', m: 0 }}>
+            © {new Date().getFullYear()} Badge Builder Pro by{' '}
+            <Typography
+              component="a"
+              href="https://www.dxbmark.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="caption"
+              sx={{ color: 'inherit', fontWeight: 700, textDecoration: 'none', '&:hover': { color: 'primary.main', textDecoration: 'underline' } }}
+            >
+              DXBMARK LLC
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {[
-                ['Terms', 'https://www.dxbmark.com/legal/terms-of-service'],
-                ['Privacy', 'https://www.dxbmark.com/legal/privacy-policy'],
-                ['Contact', 'https://www.dxbmark.com/contact'],
-              ].map(([label, href]) => (
-                <Typography
-                  key={label}
-                  component="a"
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="caption"
-                  sx={{ color: 'text.disabled', textDecoration: 'none', '&:hover': { color: 'primary.main' } }}
-                >
-                  {label}
-                </Typography>
-              ))}
-              <Typography
-                component="button"
-                variant="caption"
-                onClick={() => setShowChangelog(true)}
-                sx={{ color: 'text.disabled', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', p: 0, '&:hover': { color: 'primary.main' } }}
-              >
-                Changelog
-              </Typography>
-            </Box>
-          </Box>
+            .
+          </Typography>
         </Container>
       </Box>
 
@@ -578,6 +553,7 @@ const App = ({ mode }) => {
         open={showWorkspace} 
         onClose={() => setShowWorkspace(false)} 
         onRestoreWorkspace={handleRestoreWorkspace} 
+        config={config}
         customPresets={customPresets} 
         customBrands={customBrands} 
       />
