@@ -5,7 +5,6 @@
  * Notes: Follow TS conventions.
  */
 
-import React from 'react';
 import { UI_ICONS } from '../../constants/icons';
 
 /**

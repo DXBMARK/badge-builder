@@ -5,8 +5,7 @@
  * Notes: Expanded fonts and independent weight controls.
  */
 
-import React from 'react';
-import { MenuItem, Typography, Select, FormControl, InputLabel, Box } from '@mui/material';
+import { MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
 import InputField from '../ui/InputField';
 
 const FONT_FAMILIES = [

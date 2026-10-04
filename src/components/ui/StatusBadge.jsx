@@ -5,7 +5,6 @@
  * Notes: Supports three states — PASS, WARNING, FAIL.
  */
 
-import React from 'react';
 import { Chip, useTheme } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';

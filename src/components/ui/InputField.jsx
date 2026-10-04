@@ -5,8 +5,7 @@
  * Notes: Follow TS conventions.
  */
 
-import React from 'react';
-import { TextField, InputLabel, Box } from '@mui/material';
+import { TextField, Box } from '@mui/material';
 
 /**
  * [TS] MUI-based input field.

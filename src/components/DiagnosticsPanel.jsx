@@ -6,7 +6,6 @@
  *        GitHub Markdown rendering, and WCAG AA contrast standards.
  */
 
-import React from 'react';
 import { Paper, Box, Typography, Tooltip } from '@mui/material';
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutlined';

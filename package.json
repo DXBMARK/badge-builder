@@ -1,6 +1,6 @@
 {
   "name": "badge-builder",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": false,
   "type": "module",
   "description": "Generate your developer profile badges. A free tool to design professional badges for GitHub README files, tech stacks, and branding.",

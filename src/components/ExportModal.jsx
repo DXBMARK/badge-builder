@@ -5,14 +5,12 @@
  * Notes: Follow TS conventions.
  */
 
-import React from 'react';
 import { 
   Dialog, 
   DialogTitle, 
   DialogContent, 
   IconButton, 
   Typography, 
-  Box, 
   List, 
   ListItemButton, 
   ListItemIcon, 
@@ -27,13 +25,13 @@ import CodeIcon from '@mui/icons-material/Code';
 import DescriptionIcon from '@mui/icons-material/Description';
 import StorageIcon from '@mui/icons-material/Storage';
 
-const ExportModal = ({ show, onClose, onExportSVG, onExportPNG, onCopyCode, onCopyMarkdown, onCopyHTML, onCopyJSON, onExportConfig }) => (
+const ExportModal = ({ show, onClose, onExportSVG, onExportPNG, onCopyCode, onCopyMarkdown, onCopyHTML, onExportConfig }) => (
   <Dialog 
     open={show} 
     onClose={onClose}
     fullWidth
     maxWidth="xs"
-    PaperProps={{ sx: { borderRadius: 4, p: { xs: 0.25, sm: 1 }, m: { xs: 1, sm: 2 }, width: 'calc(100% - 16px)' } }}
+    slotProps={{ paper: { sx: { borderRadius: 4, p: { xs: 0.25, sm: 1 }, m: { xs: 1, sm: 2 }, width: 'calc(100% - 16px)' } } }}
   >
     <DialogTitle sx={{ m: 0, p: { xs: 1.5, sm: 2 }, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Typography variant="overline" sx={{ fontWeight: 900, color: 'text.secondary' }}>Export Asset</Typography>

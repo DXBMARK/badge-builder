@@ -15,6 +15,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import StorageIcon from '@mui/icons-material/Storage';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Visibility';
+import { createMarkdownSnippet, createHtmlSnippet } from '../../utils/snippets';
 
 const SvgSource = ({ svg, config, onCopy }) => {
   const theme = useTheme();
@@ -41,20 +42,9 @@ const SvgSource = ({ svg, config, onCopy }) => {
   const snippets = useMemo(() => {
     const label = config.leftText || 'Badge';
     const value = config.rightText || 'Value';
-    const color = (config.rightBg || '#4c1').replace('#', '');
-    const md = `![${label}](https://img.shields.io/badge/${encodeURIComponent(label)}-${encodeURIComponent(value)}-${color})`;
-    let htmlSnippet = '';
-    let svgDataUrl = '';
-    try {
-      const bytes = new TextEncoder().encode(svg);
-      const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
-      const safeB64 = btoa(binString);
-      htmlSnippet = `<img src="data:image/svg+xml;base64,${safeB64}" alt="${label}" />`;
-      svgDataUrl = `data:image/svg+xml;base64,${safeB64}`;
-    } catch (e) {
-      console.error("[TS Error] SvgSource encoding failed:", e);
-      htmlSnippet = '<!-- Error: Unable to encode SVG to Base64 -->';
-    }
+    const md = createMarkdownSnippet(config);
+    const htmlSnippet = createHtmlSnippet(svg, config);
+    const svgDataUrl = htmlSnippet.match(/src="([^"]+)"/)?.[1] || '';
     const json = JSON.stringify(config, null, 2);
     const github = `[![${label}](https://raw.githubusercontent.com/DXBMark/badge-builder/main/badge.svg)](https://github.com/DXBMark/badge-builder)`;
 

@@ -4,7 +4,6 @@
  * Purpose: Changelog dialog — version history and release notes
  */
 
-import React from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   Button, Box, Typography, Chip, Divider, Stack,
@@ -17,6 +16,34 @@ import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 const CHANGELOG = [
+  {
+    version: 'v1.1.0',
+    date: '2026-10-04',
+    label: 'Polish and QA release',
+    added: [
+      'DXBMARK orange theme in both light and dark modes',
+      'GitHub is now the default preview background; README and Profile mock cards follow the selected background',
+      'Help menu: documentation, issue reporting, contact, changelog, terms and privacy',
+      'Standard Library: new Badge Builder Pro brand preset, corrected WaQtor Pro preset',
+      'Naming dialogs replace browser prompts when saving presets, brand kits and packs',
+      'Shields.io-equivalent Markdown for Bulk badges, with copy / copy SVG / download SVG per badge',
+    ],
+    changed: [
+      'Footer reduced to the copyright line; licence and third-party notices live in the repository',
+      'Logo and favicon recoloured to the DXBMARK orange',
+      'Exported SVG is clean (no editor-only attributes) and uses rounded coordinates',
+      'Text width is measured with the browser, so badge text no longer overflows its segment',
+    ],
+    fixed: [
+      'PNG export blocked by the Content Security Policy (blob: images)',
+      'Outline slider showed NaN and outline colour was empty on new badges',
+      'Packs and Bulk produced NaN SVG values for partial configs',
+      'Workspace backup and restore keys did not match',
+      'Text Fit diagnostic used stale dimensions and warned on valid badges',
+      'Horizontal page scroll on small screens and in the Bulk tab',
+      'Deprecated MUI props (Grid, Stack, InputProps, PaperProps) replaced',
+    ],
+  },
   {
     version: 'v1.0.0',
     date: '2026-04-25',
@@ -71,7 +98,7 @@ const ChangelogModal = ({ open, onClose }) => (
     onClose={onClose}
     maxWidth="sm"
     fullWidth
-    PaperProps={{ sx: { borderRadius: 3 } }}
+    slotProps={{ paper: { sx: { borderRadius: 3 } } }}
   >
     <DialogTitle sx={{ pb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
       <AutoAwesomeIcon color="primary" fontSize="small" />
@@ -89,7 +116,7 @@ const ChangelogModal = ({ open, onClose }) => (
       {CHANGELOG.map((entry) => (
         <Box key={entry.version} sx={{ mb: 3 }}>
           {/* Version header */}
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
             <Chip
               label={entry.version}
               size="small"
@@ -110,7 +137,7 @@ const ChangelogModal = ({ open, onClose }) => (
             if (!items || items.length === 0) return null;
             return (
               <Box key={key} sx={{ mb: 1.5 }}>
-                <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mb: 0.5 }}>
+                <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', mb: 0.5 }}>
                   <Box sx={{ color: `${cfg.color}.main`, display: 'flex' }}>{cfg.icon}</Box>
                   <Typography variant="caption" sx={{ fontWeight: 900, color: `${cfg.color}.main`, textTransform: 'uppercase', letterSpacing: 1 }}>
                     {cfg.label}

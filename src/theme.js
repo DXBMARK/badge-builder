@@ -12,11 +12,12 @@ const getDesignTokens = (mode) => ({
     mode,
     ...(mode === 'light'
       ? {
-          primary: { main: '#212B36', contrastText: '#FFFFFF' },
-          secondary: { main: '#00AB55', contrastText: '#FFFFFF' },
-          background: { default: '#F9FAFB', paper: '#FFFFFF', neutral: '#F4F6F8' },
-          text: { primary: '#212B36', secondary: '#637381', disabled: '#919EAB' },
-          divider: 'rgba(145, 158, 171, 0.2)',
+          // DXBMARK light style: clean white canvas, same orange brand accent.
+          primary: { main: '#C85A08', light: '#F97E1A', dark: '#A24805', contrastText: '#FFFFFF' },
+          secondary: { main: '#047857', contrastText: '#FFFFFF' },
+          background: { default: '#F8FAFC', paper: '#FFFFFF', neutral: '#F1F5F9' },
+          text: { primary: '#0F172A', secondary: '#475467', disabled: '#667085' },
+          divider: 'rgba(15, 23, 42, 0.12)',
           success: { main: '#00AB55', lighter: '#C8FACD', dark: '#007B55' },
           error: { main: '#FF4842', lighter: '#FFE7D9', dark: '#B71D18' },
         }
@@ -47,9 +48,9 @@ const getDesignTokens = (mode) => ({
       styleOverrides: {
         root: { boxShadow: 'none', '&:hover': { boxShadow: 'none' } },
         containedPrimary: {
-          backgroundColor: mode === 'light' ? '#212B36' : '#F97E1A',
-          color: mode === 'light' ? '#FFFFFF' : '#0F172A',
-          '&:hover': { backgroundColor: mode === 'light' ? '#454F5B' : '#E89548' },
+          backgroundColor: '#F97E1A',
+          color: '#0F172A',
+          '&:hover': { backgroundColor: mode === 'light' ? '#E8680A' : '#E89548' },
         },
       },
     },
@@ -58,7 +59,7 @@ const getDesignTokens = (mode) => ({
         root: {
           backgroundImage: 'none',
           boxShadow: mode === 'light' 
-            ? '0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12)'
+            ? '0 0 0 1px rgba(15, 23, 42, 0.06), 0 12px 24px -4px rgba(15, 23, 42, 0.08)'
             : '0 0 0 1px rgba(255, 255, 255, 0.06), 0 12px 24px -4px rgba(0, 0, 0, 0.45)',
         },
       },

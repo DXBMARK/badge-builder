@@ -5,8 +5,8 @@
  * Notes: Placeholder for future brand features.
  */
 
-import React from 'react';
-import { Box, Typography, Button, Stack, Paper, Grid, IconButton, Tooltip } from '@mui/material';
+import { useNameDialog } from '../ui/NameDialog';
+import { Box, Typography, Button, Stack, Paper, Grid, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
@@ -33,7 +33,7 @@ const BrandCard = ({ brand, onApply, onDelete, isCustom }) => {
 
   return (
     <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2.5, '&:hover': { borderColor: 'primary.main', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' } }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1 }}>
+      <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between', mb: 1 }}>
         <Box>
           <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.7rem' }}>{brand.name}</Typography>
           <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.55rem' }}>{brand.typography.fontFamily}</Typography>
@@ -60,9 +60,10 @@ const BrandCard = ({ brand, onApply, onDelete, isCustom }) => {
 };
 
 const BrandTab = ({ config, update, customBrands = {}, saveBrand, deleteBrand }) => {
+  const [nameDialog, askName] = useNameDialog();
   
-  const handleSaveBrand = () => {
-    const name = prompt("Enter a name for this Brand Kit:");
+  const handleSaveBrand = async () => {
+    const name = await askName('Save brand kit', 'Brand kit name');
     if (!name) return;
     
     const newBrand = {
@@ -92,13 +93,14 @@ const BrandTab = ({ config, update, customBrands = {}, saveBrand, deleteBrand })
 
   return (
     <Box sx={{ p: 1 }}>
+      {nameDialog}
       <Button
         fullWidth
         variant="contained"
         size="large"
         startIcon={<SaveIcon />}
         onClick={handleSaveBrand}
-        sx={{ mb: 2.5, py: 1, borderRadius: 2.5, fontWeight: 800, boxShadow: '0 4px 12px rgba(0,171,85,0.2)' }}
+        sx={{ mb: 2.5, py: 1, borderRadius: 2.5, fontWeight: 800, boxShadow: '0 4px 12px rgba(249,126,26,0.25)' }}
       >
         Save Current as Brand Kit
       </Button>
@@ -110,7 +112,7 @@ const BrandTab = ({ config, update, customBrands = {}, saveBrand, deleteBrand })
           </Typography>
           <Grid container spacing={1.5}>
             {customList.map(brand => (
-          <Grid item xs={6} key={brand.id}>
+          <Grid size={{ xs: 6 }} key={brand.id}>
                 <BrandCard brand={brand} onApply={handleApply} onDelete={deleteBrand} isCustom />
               </Grid>
             ))}
@@ -123,7 +125,7 @@ const BrandTab = ({ config, update, customBrands = {}, saveBrand, deleteBrand })
       </Typography>
       <Grid container spacing={1.5}>
         {BUILT_IN_BRANDS.map(brand => (
-          <Grid item xs={6} key={brand.id}>
+          <Grid size={{ xs: 6 }} key={brand.id}>
             <BrandCard brand={brand} onApply={handleApply} />
           </Grid>
         ))}

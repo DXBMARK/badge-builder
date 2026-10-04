@@ -6,11 +6,16 @@
  */
 
 import React from 'react';
-import { Box, Typography, TextField, Button, Paper, Grid, Stack, IconButton } from '@mui/material';
+import { Box, Typography, TextField, Button, Paper, Grid, Stack, IconButton, Tooltip } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import CodeIcon from '@mui/icons-material/Code';
 import { buildSVG } from '../../utils/svgBuilder';
+import { downloadSVG } from '../../utils/export';
+
+const hex = (c, fallback) => String(c || fallback).replace('#', '').slice(0, 8);
+const slug = (t) => String(t).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'badge';
 
 const BulkTab = ({ config, onCopy }) => {
   const [list, setList] = React.useState('React, Node.js, Docker, TypeScript, GitHub');
@@ -26,7 +31,8 @@ const BulkTab = ({ config, onCopy }) => {
       return {
         name: item,
         svg: svg,
-        md: `![${item}](https://img.shields.io/badge/${encodeURIComponent(item)}-black?style=${config.style || 'for-the-badge'}&logo=${item.toLowerCase()})`
+        // Shields.io equivalent of the designed badge (same label, message and colours).
+        md: `![${config.leftText || item}](https://img.shields.io/badge/${encodeURIComponent((config.leftText || '').replace(/-/g, '--'))}-${encodeURIComponent(item.replace(/-/g, '--'))}-${hex(config.rightBg, 'F97E1A')}?labelColor=${hex(config.leftBg, '0F172A')})`,
       };
     });
   }, [items, config]);
@@ -67,9 +73,9 @@ const BulkTab = ({ config, onCopy }) => {
         PREVIEW ({generatedBadges.length})
       </Typography>
       
-      <Grid container spacing={2}>
+      <Grid container spacing={1.5}>
         {generatedBadges.map((badge, idx) => (
-          <Grid item xs={12} sm={6} key={idx}>
+          <Grid size={{ xs: 12, sm: 6 }} key={idx}>
             <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 3, bgcolor: 'background.neutral' }}>
               <Box sx={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1, transform: 'scale(0.8)' }}>
                 <div dangerouslySetInnerHTML={{ __html: badge.svg }} />
@@ -78,12 +84,21 @@ const BulkTab = ({ config, onCopy }) => {
                 {badge.name}
               </Typography>
               <Stack direction="row" spacing={0.5}>
-                <IconButton size="small" onClick={() => onCopy(badge.md, `Markdown for ${badge.name}`)} sx={{ flex: 1, bgcolor: 'background.paper', borderRadius: 1.5 }}>
-                  <ContentCopyIcon sx={{ fontSize: 14 }} />
-                </IconButton>
-                <IconButton size="small" onClick={() => onCopy(badge.svg, `SVG for ${badge.name}`)} sx={{ flex: 1, bgcolor: 'background.paper', borderRadius: 1.5 }}>
-                  <DownloadIcon sx={{ fontSize: 14 }} />
-                </IconButton>
+                <Tooltip title="Copy Markdown (Shields.io equivalent)">
+                  <IconButton size="small" aria-label={`Copy Markdown for ${badge.name}`} onClick={() => onCopy(badge.md, `Markdown for ${badge.name}`)} sx={{ flex: 1, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1.5 }}>
+                    <ContentCopyIcon sx={{ fontSize: 14 }} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Copy SVG code">
+                  <IconButton size="small" aria-label={`Copy SVG for ${badge.name}`} onClick={() => onCopy(badge.svg, `SVG for ${badge.name}`)} sx={{ flex: 1, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1.5 }}>
+                    <CodeIcon sx={{ fontSize: 14 }} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Download SVG file">
+                  <IconButton size="small" aria-label={`Download SVG for ${badge.name}`} onClick={() => downloadSVG(badge.svg, `${slug(badge.name)}.svg`)} sx={{ flex: 1, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1.5 }}>
+                    <DownloadIcon sx={{ fontSize: 14 }} />
+                  </IconButton>
+                </Tooltip>
               </Stack>
             </Paper>
           </Grid>

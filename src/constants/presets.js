@@ -31,17 +31,29 @@ export const normalizePresetConfig = (config = {}) => ({
 export const BASE_PRESETS = [
   // --- BRAND / FEATURED ---
   {
-    id: 'waqtor-pro',
-    name: 'Waqtor Pro',
+    id: 'dxbmark-pro',
+    name: 'Badge Builder Pro',
     category: 'brand',
     config: {
-      leftText: "Badge", rightText: "Builder Pro",
-      width: 200, height: 40, leftWidth: 80, borderRadius: 8,
-      leftBg: "#000000", rightBg: "#802050", useGradient: true,
-      gradStart: "#a03060", gradEnd: "#601030",
-      leftTextColor: "#FFFFFF", rightTextColor: "#FFFFFF",
-      leftFontSize: 14, rightFontSize: 14, leftFontWeight: "800", rightFontWeight: "800",
-      fontFamily: "Inter, sans-serif", iconType: "bolt", iconMode: "preset", iconScale: 1.2, iconX: 10, iconY: 8
+      leftText: "Badge Builder", rightText: "Pro",
+      width: 160, height: 32, leftWidth: 108, borderRadius: 6,
+      leftBg: "#0F172A", rightBg: "#F97E1A", useGradient: false,
+      leftTextColor: "#FFFFFF", rightTextColor: "#0F172A",
+      leftFontSize: 13, rightFontSize: 13, leftFontWeight: "800", rightFontWeight: "800",
+      fontFamily: "Inter, sans-serif", iconType: "none", iconMode: "preset", iconScale: 1, autoWidth: true
+    }
+  },
+  {
+    id: 'waqtor-pro',
+    name: 'WaQtor Pro',
+    category: 'brand',
+    config: {
+      leftText: "WaQtor", rightText: "Pro",
+      width: 150, height: 32, leftWidth: 92, borderRadius: 6,
+      leftBg: "#0E1B3D", rightBg: "#FFC21A", useGradient: false,
+      leftTextColor: "#FFFFFF", rightTextColor: "#0E1B3D",
+      leftFontSize: 13, rightFontSize: 13, leftFontWeight: "800", rightFontWeight: "800",
+      fontFamily: "Inter, sans-serif", iconType: "none", iconMode: "preset", autoWidth: true
     }
   },
 

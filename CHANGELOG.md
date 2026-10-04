@@ -10,6 +10,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.1.0] - 2026-10-04 — Polish and QA release
+
+### Added
+- DXBMARK orange theme in both light and dark modes
+- GitHub is now the default preview background; README and Profile mock cards follow the selected background
+- Help menu: documentation, issue reporting, contact, changelog, terms and privacy
+- Standard Library: new Badge Builder Pro brand preset, corrected WaQtor Pro preset
+- Naming dialogs replace browser prompts when saving presets, brand kits and packs
+- Shields.io-equivalent Markdown for Bulk badges, with copy / copy SVG / download SVG per badge
+
+### Changed
+- Footer reduced to the copyright line; licence and third-party notices live in the repository
+- Logo and favicon recoloured to the DXBMARK orange
+- Exported SVG is clean (no editor-only attributes) and uses rounded coordinates
+- Text width is measured with the browser, so badge text no longer overflows its segment
+
+### Fixed
+- PNG export blocked by the Content Security Policy (blob: images)
+- Outline slider showed NaN and outline colour was empty on new badges
+- Packs and Bulk produced NaN SVG values for partial configs
+- Workspace backup and restore keys did not match
+- Text Fit diagnostic used stale dimensions and warned on valid badges
+- Horizontal page scroll on small screens and in the Bulk tab
+- Deprecated MUI props (Grid, Stack, InputProps, PaperProps) replaced
+
+---
+
 ## [v1.0.0] - 2026-04-25 — Initial Public Release
 
 ### Added
