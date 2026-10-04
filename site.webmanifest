@@ -9,9 +9,9 @@
   "theme_color": "#0F172A",
   "icons": [
     {
-      "src": "/badge-builder/palette.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/badge-builder/logo.png",
+      "sizes": "256x256",
+      "type": "image/png",
       "purpose": "any"
     },
     {
