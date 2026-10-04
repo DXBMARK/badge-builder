@@ -1,6 +1,6 @@
 /*
  * Project: SVG Badge Builder
- * Author: DXBMark Ltd.
+ * Author: DXBMARK LLC
  * Purpose: Changelog dialog — version history and release notes
  */
 
@@ -139,13 +139,13 @@ const ChangelogModal = ({ open, onClose }) => (
         Built with ❤️ by{' '}
         <Typography
           component="a"
-          href="https://portfolio.dxbmark.com/"
+          href="https://www.dxbmark.com/"
           target="_blank"
           rel="noopener noreferrer"
           variant="caption"
           sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 700, '&:hover': { textDecoration: 'underline' } }}
         >
-          DXBMark Ltd.
+          DXBMARK LLC
         </Typography>
       </Typography>
     </DialogContent>

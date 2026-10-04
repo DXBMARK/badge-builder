@@ -520,16 +520,46 @@ const App = ({ mode }) => {
         <Container maxWidth="xl">
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, textAlign: { xs: 'center', sm: 'left' } }}>
             <Typography variant="caption" sx={{ color: 'text.disabled', fontWeight: 700 }}>
-              © {new Date().getFullYear()} Badge Builder Pro by DXBMark Ltd. All rights reserved.
+              © {new Date().getFullYear()} Badge Builder Pro by{' '}
+              <Typography
+                component="a"
+                href="https://www.dxbmark.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="caption"
+                sx={{ color: 'inherit', fontWeight: 700, textDecoration: 'none', '&:hover': { color: 'primary.main', textDecoration: 'underline' } }}
+              >
+                DXBMARK LLC
+              </Typography>
+              . All rights reserved.
             </Typography>
-            <Typography
-              component="button"
-              variant="caption"
-              onClick={() => setShowChangelog(true)}
-              sx={{ color: 'text.disabled', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', p: 0, '&:hover': { color: 'primary.main' } }}
-            >
-              Changelog
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {[
+                ['Terms', 'https://www.dxbmark.com/legal/terms-of-service'],
+                ['Privacy', 'https://www.dxbmark.com/legal/privacy-policy'],
+                ['Contact', 'https://www.dxbmark.com/contact'],
+              ].map(([label, href]) => (
+                <Typography
+                  key={label}
+                  component="a"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="caption"
+                  sx={{ color: 'text.disabled', textDecoration: 'none', '&:hover': { color: 'primary.main' } }}
+                >
+                  {label}
+                </Typography>
+              ))}
+              <Typography
+                component="button"
+                variant="caption"
+                onClick={() => setShowChangelog(true)}
+                sx={{ color: 'text.disabled', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', p: 0, '&:hover': { color: 'primary.main' } }}
+              >
+                Changelog
+              </Typography>
+            </Box>
           </Box>
         </Container>
       </Box>

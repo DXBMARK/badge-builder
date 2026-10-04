@@ -1,6 +1,6 @@
 /*
  * Project: SVG Badge Builder
- * Author: DXBMark Ltd.
+ * Author: DXBMARK LLC
  * Purpose: Workspace Data Management (Import/Export)
  */
 
