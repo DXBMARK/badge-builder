@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'" />
+    <style>html,body{background:#0F172A}</style>
+
 
     <!-- ═══════════════════════════════════════════
          PRIMARY META
@@ -12,16 +15,16 @@
     <meta name="keywords" content="badge builder, svg badge, github badge, readme badge, shields.io alternative, tech stack badge, open source badge generator, DXBMark, developer tools" />
         <meta name="application-name" content="Badge Builder Pro" />
         <meta name="generator" content="Vite + React 19 + Material UI v9" />
-    <meta name="author" content="DXBMark Ltd." />
-        <meta name="creator" content="DXBMark Ltd." />
-        <meta name="publisher" content="DXBMark Ltd." />
-    <meta name="copyright" content="© 2026 Badge Builder Pro by DXBMark Ltd. All rights reserved." />
+    <meta name="author" content="DXBMARK LLC" />
+        <meta name="creator" content="DXBMARK LLC" />
+        <meta name="publisher" content="DXBMARK LLC" />
+    <meta name="copyright" content="© 2026 Badge Builder Pro by DXBMARK LLC. Open source under the MIT License." />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="format-detection" content="telephone=no, address=no, email=no" />
-    <meta name="theme-color" content="#0d1117" />
-        <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#0F172A" />
+        <meta name="color-scheme" content="dark light" />
     <link rel="canonical" href="https://dxbmark.github.io/badge-builder/" />
         <link rel="manifest" href="/badge-builder/site.webmanifest" />
         <link rel="sitemap" type="application/xml" href="https://dxbmark.github.io/badge-builder/sitemap.xml" />
@@ -42,10 +45,10 @@
     <meta property="og:title" content="Badge Builder Pro — SVG Badge Generator by DXBMark" />
     <meta property="og:description" content="Design professional SVG badges for GitHub README files, tech stacks, and branding. Free, open-source, no sign-up required." />
     <meta property="og:url" content="https://dxbmark.github.io/badge-builder/" />
-    <meta property="og:image" content="https://dxbmark.github.io/badge-builder/screencapture-badge-builder.png" />
-    <meta property="og:image:width" content="1280" />
-    <meta property="og:image:height" content="800" />
-    <meta property="og:image:alt" content="Badge Builder Pro interface screenshot" />
+    <meta property="og:image" content="https://dxbmark.github.io/badge-builder/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Badge Builder Pro: design SVG badges for GitHub READMEs, DXBMARK Style" />
         <meta property="og:image:type" content="image/png" />
 
     <!-- ═══════════════════════════════════════════
@@ -55,8 +58,8 @@
         <meta name="twitter:url" content="https://dxbmark.github.io/badge-builder/" />
     <meta name="twitter:title" content="Badge Builder Pro — SVG Badge Generator by DXBMark" />
     <meta name="twitter:description" content="Design professional SVG badges for GitHub README files, tech stacks, and branding. Free, open-source, no sign-up required." />
-    <meta name="twitter:image" content="https://dxbmark.github.io/badge-builder/screencapture-badge-builder.png" />
-    <meta name="twitter:image:alt" content="Badge Builder Pro interface screenshot" />
+    <meta name="twitter:image" content="https://dxbmark.github.io/badge-builder/og-image.png" />
+    <meta name="twitter:image:alt" content="Badge Builder Pro: design SVG badges for GitHub READMEs, DXBMARK Style" />
     <meta name="twitter:creator" content="@DXBMark" />
     <meta name="twitter:site" content="@DXBMark" />
 
@@ -81,8 +84,8 @@
         {
           "@type": "Organization",
           "@id": "https://dxbmark.github.io/badge-builder/#organization",
-          "name": "DXBMark Ltd.",
-          "url": "https://github.com/DXBMark",
+          "name": "DXBMARK LLC",
+          "url": "https://www.dxbmark.com/",
           "logo": {
             "@type": "ImageObject",
             "url": "https://dxbmark.github.io/badge-builder/palette.svg"
@@ -101,8 +104,8 @@
           "operatingSystem": "Web",
           "softwareVersion": "1.0.0",
           "url": "https://dxbmark.github.io/badge-builder/",
-          "image": "https://dxbmark.github.io/badge-builder/screencapture-badge-builder.png",
-          "screenshot": "https://dxbmark.github.io/badge-builder/screencapture-badge-builder.png",
+          "image": "https://dxbmark.github.io/badge-builder/og-image.png",
+          "screenshot": "https://dxbmark.github.io/badge-builder/og-image.png",
           "description": "A free, open-source badge builder for creating SVG badges for GitHub README files, developer portfolios, brand kits, and tech stack showcases.",
           "creator": {
             "@id": "https://dxbmark.github.io/badge-builder/#organization"

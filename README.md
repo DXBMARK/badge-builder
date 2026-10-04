@@ -171,6 +171,8 @@ Contributions, issues, and feature requests are welcome!
 
 This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
 
+Badge Builder Pro is free for everyone. Third-party libraries and icon sets keep their own licenses and rights; see [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md). Brand names, logos and icons shown in badges belong to their respective owners and are not affiliated with or endorsed by DXBMARK LLC.
+
 ---
 
 <div align="center">

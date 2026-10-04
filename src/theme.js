@@ -21,13 +21,14 @@ const getDesignTokens = (mode) => ({
           error: { main: '#FF4842', lighter: '#FFE7D9', dark: '#B71D18' },
         }
       : {
-          primary: { main: '#FFFFFF', contrastText: '#212B36' },
-          secondary: { main: '#00AB55', contrastText: '#FFFFFF' },
-          background: { default: '#161C24', paper: '#212B36', neutral: '#28323D' },
-          text: { primary: '#FFFFFF', secondary: '#919EAB', disabled: '#637381' },
-          divider: 'rgba(145, 158, 171, 0.24)',
-          success: { main: '#00AB55', lighter: 'rgba(0, 171, 85, 0.16)', dark: '#5BE584' },
-          error: { main: '#FF4842', lighter: 'rgba(255, 72, 66, 0.16)', dark: '#FFA48D' },
+          // DXBMARK dark style: deep navy canvas, orange brand accent.
+          primary: { main: '#F97E1A', light: '#FFA24D', dark: '#E89548', contrastText: '#0F172A' },
+          secondary: { main: '#34D399', contrastText: '#0F172A' },
+          background: { default: '#0F172A', paper: '#141C30', neutral: '#1B2540' },
+          text: { primary: '#FFFFFF', secondary: '#C3CAD6', disabled: '#8B95A7' },
+          divider: 'rgba(255, 255, 255, 0.10)',
+          success: { main: '#34D399', lighter: 'rgba(52, 211, 153, 0.14)', dark: '#6EE7B7' },
+          error: { main: '#FF6B66', lighter: 'rgba(255, 107, 102, 0.16)', dark: '#FFA48D' },
         }),
   },
   typography: {
@@ -46,9 +47,9 @@ const getDesignTokens = (mode) => ({
       styleOverrides: {
         root: { boxShadow: 'none', '&:hover': { boxShadow: 'none' } },
         containedPrimary: {
-          backgroundColor: mode === 'light' ? '#212B36' : '#FFFFFF',
-          color: mode === 'light' ? '#FFFFFF' : '#212B36',
-          '&:hover': { backgroundColor: mode === 'light' ? '#454F5B' : '#DFE3E8' },
+          backgroundColor: mode === 'light' ? '#212B36' : '#F97E1A',
+          color: mode === 'light' ? '#FFFFFF' : '#0F172A',
+          '&:hover': { backgroundColor: mode === 'light' ? '#454F5B' : '#E89548' },
         },
       },
     },
@@ -58,7 +59,7 @@ const getDesignTokens = (mode) => ({
           backgroundImage: 'none',
           boxShadow: mode === 'light' 
             ? '0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12)'
-            : '0 0 2px 0 rgba(0, 0, 0, 0.2), 0 12px 24px -4px rgba(0, 0, 0, 0.4)',
+            : '0 0 0 1px rgba(255, 255, 255, 0.06), 0 12px 24px -4px rgba(0, 0, 0, 0.45)',
         },
       },
     },
@@ -72,4 +73,4 @@ const getDesignTokens = (mode) => ({
 });
 
 export const getTheme = (mode) => createTheme(getDesignTokens(mode));
-export default getTheme('light');
+export default getTheme('dark');

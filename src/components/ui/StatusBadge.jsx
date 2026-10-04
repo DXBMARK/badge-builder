@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Chip } from '@mui/material';
+import { Chip, useTheme } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -41,7 +41,12 @@ const STATUS_STYLES = {
  */
 const StatusBadge = ({ label, status, pass }) => {
   const resolvedStatus = status ?? (pass ? 'PASS' : 'FAIL');
-  const style = STATUS_STYLES[resolvedStatus] ?? STATUS_STYLES.FAIL;
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+  const base = STATUS_STYLES[resolvedStatus] ?? STATUS_STYLES.FAIL;
+  const DARK_TEXT = { PASS: '#6EE7B7', WARNING: '#FCD34D', FAIL: '#FCA5A5' };
+  // Higher-contrast text on dark backgrounds (WCAG AA).
+  const style = isDark ? { ...base, color: DARK_TEXT[resolvedStatus] ?? DARK_TEXT.FAIL, bgcolor: base.bgcolor.replace('0.08', '0.16') } : base;
 
   return (
     <Chip

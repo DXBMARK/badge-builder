@@ -1,6 +1,6 @@
 /*
  * Project: SVG Badge Builder
- * Author: DXBMark Ltd.
+ * Author: DXBMARK LLC
  * Purpose: Encode/Decode configurations via URL hash using lz-string
  */
 
@@ -26,8 +26,11 @@ export const encodeConfigToHash = (config) => {
  * @param {string} hash - The URL hash (without the #config= part)
  * @returns {Object|null}
  */
-export const decodeConfigFromHash = (hash) => {
+export const decodeConfigFromHash = (rawHash) => {
   try {
+    // Accept "#<data>", "#config=<data>" and bare "<data>".
+    const hash = String(rawHash || '').replace(/^#/, '').replace(/^config=/, '');
+    if (!hash || hash.length > 20000) return null;
     const jsonStr = LZString.decompressFromEncodedURIComponent(hash);
     if (!jsonStr) return null;
     return JSON.parse(jsonStr);
